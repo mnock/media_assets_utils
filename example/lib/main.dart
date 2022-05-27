@@ -32,8 +32,9 @@ class _MyAppState extends State<MyApp> {
   Future<void> initThumbnail(BuildContext context) async {
     final PermissionStatus status = await Permission.storage.request();
     if (status.isGranted) {
-      final List<AssetEntity>? assets = await AssetPicker.pickAssets(context,
-          requestType: RequestType.video, maxAssets: 1);
+      final List<AssetEntity>? assets = await AssetPicker.pickAssets(context, pickerConfig: AssetPickerConfig(
+        maxAssets: 1,
+        requestType: RequestType.image,));
       if ((assets ?? []).isNotEmpty) {
         file = await assets!.first.file;
         setState(() {
@@ -59,7 +60,9 @@ class _MyAppState extends State<MyApp> {
     final PermissionStatus status = await Permission.storage.request();
     if (status.isGranted) {
       final List<AssetEntity>? assets = await AssetPicker.pickAssets(context,
-          requestType: type, maxAssets: 1);
+         pickerConfig: AssetPickerConfig(
+        maxAssets: 1,
+        requestType: type,));
       if ((assets ?? []).isNotEmpty) {
         Directory? directory;
         if (Platform.isIOS) {
@@ -113,11 +116,13 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () async {
                   await initCompress(_, RequestType.video);
                   outputFile = await MediaAssetUtils.compressVideo(file!,
-                      saveToLibrary: true,
-                      thumbnailConfig: ThumbnailConfig(
-                        file: File(
-                            '${file!.parent.path}/thumbnail_${Random().nextInt(100000)}.jpg'),
-                      ), onVideoCompressProgress: (double progress) {
+                      quality:VideoQuality.very_high,
+                      saveToLibrary: false,
+                      // thumbnailConfig: ThumbnailConfig(
+                      //   file: File(
+                      //       '${file!.parent.path}/thumbnail_${Random().nextInt(100000)}.jpg'),
+                      // ),
+                      onVideoCompressProgress: (double progress) {
                     print(progress);
                   });
                   setState(() {

@@ -2,6 +2,7 @@ package com.lucky1213.media_asset_utils
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.ExifInterface
 import android.media.MediaMetadataRetriever
 import android.os.*
@@ -319,8 +320,8 @@ class MediaAssetsUtilsPlugin: FlutterPlugin, MethodCallHandler {
                   try {
                     val srcFile = File(MediaStoreUtils.generateTempPath(applicationContext, DirectoryType.PICTURES.value, extension = ".jpg"))
                     val fos = FileOutputStream(srcFile)
-                    val bmp = BitmapFactory.decodeByteArray(data, 0, data.size)
-                    bmp.compress(Bitmap.CompressFormat.JPEG, quality, fos)
+                    val bmp = BitmapFactory.decodeByteArray(data.toByteArray(), 0, data.toByteArray().size)
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos)
                     fos.flush()
                     fos.close()
                     MediaStoreUtils.insert(applicationContext, srcFile)
